@@ -1019,7 +1019,20 @@ void findStationLocationAndVelocityInGround
     const Vec3& v_GB = getBodyOriginVelocity(state);
     velocityInGround = v_GB + w_GB % p_BS_G;                         // 12 flops
 }
+    
+[[nodiscard]] std::pair<Vec3, Vec3> findStationLocationAndVelocityInGround
+    (const State& state, const Vec3& locationOnB) const
+{
+  const Vec3& p_GB   = getBodyOriginLocation(state);
+  const Vec3  p_BS_G = expressVectorInGroundFrame(state,locationOnB);//15flops
+  const Vec3 locationOnGround = p_GB + p_BS_G;                                  // 3flops
 
+  const Vec3& w_GB = getBodyAngularVelocity(state);
+  const Vec3& v_GB = getBodyOriginVelocity(state);
+  const Vec3 velocityInGround = v_GB + w_GB % p_BS_G;                         // 12 flops
+
+  return std::make_pair(locationOnGround, velocityInGround);
+}
 
 /** It is cheaper to calculate a station's ground location, velocity, and 
 acceleration together than to do them separately. Here we can return them all in
