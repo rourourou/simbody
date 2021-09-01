@@ -1316,6 +1316,21 @@ Real calcStationToStationDistance(const State&         state,
     return (r_Go_PA - r_Go_PB).norm();
 }
 
+Vec3 calcStationToStationDistanceVec(const State&         state,
+                                       const Vec3&          locationOnBodyB,
+                                       const MobilizedBody& bodyA,
+                                       const Vec3&          locationOnBodyA) const
+  {
+    if (isSameMobilizedBody(bodyA))
+      return (locationOnBodyA-locationOnBodyB);
+
+    const Vec3 r_Go_PB =
+        this->findStationLocationInGround(state,locationOnBodyB);
+    const Vec3 r_Go_PA =
+        bodyA.findStationLocationInGround(state,locationOnBodyA);
+    return (r_Go_PA - r_Go_PB);
+  }
+
 /** Calculate the time rate of change of distance from a fixed point PB on 
 body B to a fixed point PA on body A. We are given the location vectors 
 p_Bo_PB and p_Ao_PA, expressed in their respective frames. We return 
