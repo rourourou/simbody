@@ -346,22 +346,22 @@ inline int sign(const negator<double>&      x) {return -sign(-x);}
  * a conjugate number returns a complex result at no additional cost.
  */
 //@{
-inline unsigned char  square(unsigned char  u) {return u*u;}
-inline unsigned short square(unsigned short u) {return u*u;}
-inline unsigned int   square(unsigned int   u) {return u*u;}
-inline unsigned long  square(unsigned long  u) {return u*u;}
-inline unsigned long long square(unsigned long long u) {return u*u;}
+inline constexpr unsigned char  square(unsigned char  u) {return u*u;}
+inline constexpr unsigned short square(unsigned short u) {return u*u;}
+inline constexpr unsigned int   square(unsigned int   u) {return u*u;}
+inline constexpr unsigned long  square(unsigned long  u) {return u*u;}
+inline constexpr unsigned long long square(unsigned long long u) {return u*u;}
 
-inline char        square(char c) {return c*c;}
+inline constexpr char        square(char c) {return c*c;}
 
-inline signed char square(signed char i) {return i*i;}
-inline short       square(short       i) {return i*i;}
-inline int         square(int         i) {return i*i;}
-inline long        square(long        i) {return i*i;}
-inline long long   square(long long   i) {return i*i;}
+inline constexpr signed char square(signed char i) {return i*i;}
+inline constexpr short       square(short       i) {return i*i;}
+inline constexpr int         square(int         i) {return i*i;}
+inline constexpr long        square(long        i) {return i*i;}
+inline constexpr long long   square(long long   i) {return i*i;}
 
-inline float       square(const float&       x) {return x*x;}
-inline double      square(const double&      x) {return x*x;}
+inline constexpr float       square(const float&       x) {return x*x;}
+inline constexpr double      square(const double&      x) {return x*x;}
 
 // Negation is free for negators, so we can square them and clean
 // them up at the same time at no extra cost.

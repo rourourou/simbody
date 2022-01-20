@@ -91,7 +91,7 @@ public:
 /** Default constructor creates an invalid contact material; you must 
 specify at least stiffness before using this material. Defaults are provided
 for dissipation (none) and friction (none). **/
-ContactMaterial() {clear();}
+constexpr ContactMaterial() = default;
 
 /** Create a contact material with a complete set of compliant contact
 material properties. This does not set the coefficient of restitution. 
@@ -133,7 +133,7 @@ stiffness and dissipation from available data.
     force due to stiffness and dissipation effects. This is not commonly
     used and defaults to zero.
 **/
-ContactMaterial(Real stiffness, Real dissipation, 
+constexpr ContactMaterial(Real stiffness, Real dissipation,
                 Real staticFriction, Real dynamicFriction,
                 Real viscousFriction = 0) {
     setStiffness(stiffness);
@@ -143,35 +143,35 @@ ContactMaterial(Real stiffness, Real dissipation,
 
 /** Return false if material properties have not yet been supplied for this
 contact material. **/
-bool isValid() const {return m_stiffness > 0;}
+constexpr bool isValid() const {return m_stiffness > 0;}
 
 /** Return the material stiffness k=(force/area)/%%strain. **/
-Real getStiffness() const 
+constexpr Real getStiffness() const
 {   SimTK_ERRCHK(isValid(), "ContactMaterial::getStiffness()",
         "This is an invalid ContactMaterial.");
     return m_stiffness; }
 /** Return precalculated 2/3 power of material stiffness k (k^(2/3)). **/
-Real getStiffness23() const 
+constexpr Real getStiffness23() const
 {   SimTK_ERRCHK(isValid(), "ContactMaterial::getStiffness23()",
         "This is an invalid ContactMaterial.");
     return m_stiffness23; }
 /** Return the material dissipation coefficient c, in units of 1/velocity. **/
-Real getDissipation() const 
+constexpr Real getDissipation() const
 {   SimTK_ERRCHK(isValid(), "ContactMaterial::getDissipation()",
         "This is an invalid ContactMaterial.");
     return m_dissipation; }
 /** Return the coefficient of static friction mu_s (unitless). **/
-Real getStaticFriction() const 
+constexpr Real getStaticFriction() const
 {   SimTK_ERRCHK(isValid(), "ContactMaterial::getStaticFriction()",
         "This is an invalid ContactMaterial.");
     return m_staticFriction; }
 /** Return the coefficient of dynamic friction mu_d (unitless). **/
-Real getDynamicFriction() const 
+constexpr Real getDynamicFriction() const
 {   SimTK_ERRCHK(isValid(), "ContactMaterial::getDynamicFriction()",
         "This is an invalid ContactMaterial.");
     return m_dynamicFriction; }
 /** Return the coefficient of viscous friction mu_v (1/velocity). **/
-Real getViscousFriction() const 
+constexpr Real getViscousFriction() const
 {   SimTK_ERRCHK(isValid(), "ContactMaterial::getViscousFriction()",
         "This is an invalid ContactMaterial.");
     return m_viscousFriction; }
@@ -179,7 +179,7 @@ Real getViscousFriction() const
 /** Supply material stiffness k=(force/area)/%%strain. A compliant
 contact model will then calculate the contact area A and strain fraction
 s to calculate the resulting force f=k*A*s. **/
-ContactMaterial& setStiffness(Real stiffness) {
+constexpr ContactMaterial& setStiffness(Real stiffness) {
     SimTK_ERRCHK1_ALWAYS(stiffness >= 0, "ContactMaterial::setStiffness()",
         "Stiffness %g is illegal; must be >= 0.", stiffness);
     m_stiffness = stiffness;
@@ -190,7 +190,7 @@ ContactMaterial& setStiffness(Real stiffness) {
 /** Supply material dissipation coefficient c, which is the slope of the
 coefficient of restitution (e) vs. impact speed (v) curve, with e=1-cv at
 low (non-yielding) impact speeds v. **/
-ContactMaterial& setDissipation(Real dissipation) {
+constexpr ContactMaterial& setDissipation(Real dissipation) {
     SimTK_ERRCHK1_ALWAYS(dissipation >= 0, "ContactMaterial::setDissipation()",
         "Dissipation %g (in 1/speed) is illegal; must be >= 0.", dissipation);
     m_dissipation = dissipation;
@@ -198,7 +198,7 @@ ContactMaterial& setDissipation(Real dissipation) {
 }
 
 /** Set the friction coefficients for this material. **/
-ContactMaterial& setFriction(Real staticFriction,
+constexpr ContactMaterial& setFriction(Real staticFriction,
                              Real dynamicFriction,
                              Real viscousFriction = 0)
 {
@@ -226,7 +226,7 @@ as v->0.5 as is typical of rubber. If this material is to be used in a
 circumstance in which its volume must be reduced under contact pressure (because
 there is no room to move), consider using the confined compression modulus
 instead. @see calcConfinedCompressionStiffness() **/
-static Real calcPlaneStrainStiffness(Real youngsModulus, 
+static constexpr Real calcPlaneStrainStiffness(Real youngsModulus,
                                      Real poissonsRatio) 
 {
     SimTK_ERRCHK2_ALWAYS(youngsModulus >= 0 &&
@@ -235,7 +235,7 @@ static Real calcPlaneStrainStiffness(Real youngsModulus,
         "Illegal material properties E=%g, v=%g.", 
         youngsModulus, poissonsRatio);
 
-    return youngsModulus / (1-square(poissonsRatio)); 
+    return youngsModulus / (1-square(poissonsRatio));
 }
 
 
@@ -247,7 +247,7 @@ modulus k=E(1-v)/((1+v)(1-2v)). Note that the stiffness becomes infinite when
 the material becomes incompressible as v->0.5. That means rubber will have
 a near infinite stiffness if you calculate it this way; make sure that's what
 you want! @see calcPlaneStrainStiffness() **/
-static Real calcConfinedCompressionStiffness(Real youngsModulus, 
+static constexpr Real calcConfinedCompressionStiffness(Real youngsModulus,
                                              Real poissonsRatio) 
 {
     SimTK_ERRCHK2_ALWAYS(youngsModulus >= 0 &&
@@ -271,7 +271,7 @@ impact velocity by the dissipation coefficient c (1/velocity) by e=(1-cv) so we
 can calculate c if we have observed e at some low speed v as c=(1-e)/v. If the
 coefficient of restitution is 1 we'll return c=0 and ignore v, otherwise
 v must be greater than zero. **/
-static Real calcDissipationFromObservedRestitution
+static constexpr Real calcDissipationFromObservedRestitution
    (Real restitution, Real speed) {
     if (restitution==1) return 0;
     SimTK_ERRCHK2_ALWAYS(0<=restitution && restitution<=1 && speed>0,
@@ -284,30 +284,30 @@ static Real calcDissipationFromObservedRestitution
 /** Restore this contact material to an invalid state containing no stiffness
 specification and default values for dissipation (none) and friction 
 (none). **/
-void clear() {
-    m_stiffness   = NaN; // unspecified
-    m_stiffness23 = NaN;
-    m_restitution = NaN; // unspecified
-    m_dissipation = 0;  // default; no dissipation
-    // default; no friction
-    m_staticFriction=m_dynamicFriction=m_viscousFriction = 0;
-}
+//void constexpr clear() {
+//    m_stiffness   = NaN; // unspecified
+//    m_stiffness23 = NaN;
+//    m_restitution = NaN; // unspecified
+//    m_dissipation = 0;  // default; no dissipation
+//    // default; no friction
+//    m_staticFriction=m_dynamicFriction=m_viscousFriction = 0;
+//}
 
 //--------------------------------------------------------------------------
 private:
 
 // For compliant contact models.
-Real    m_stiffness;        // k: stress/%strain=(force/area)/%strain
-Real    m_stiffness23;      // k^(2/3) in case we need it
-Real    m_dissipation;      // c: %normalForce/normalVelocity
+Real    m_stiffness{};        // k: stress/%strain=(force/area)/%strain
+Real    m_stiffness23{};      // k^(2/3) in case we need it
+Real    m_dissipation{};      // c: %normalForce/normalVelocity
 
 // For impulsive collisions.
-Real    m_restitution;      // e: unitless, e=(1-cv)
+Real    m_restitution{};      // e: unitless, e=(1-cv)
 
 // Friction.
-Real    m_staticFriction;   // us: unitless
-Real    m_dynamicFriction;  // ud: unitless
-Real    m_viscousFriction;  // uv: %normalForce/slipVelocity
+Real    m_staticFriction{};   // us: unitless
+Real    m_dynamicFriction{};  // ud: unitless
+Real    m_viscousFriction{};  // uv: %normalForce/slipVelocity
 };
 
 
