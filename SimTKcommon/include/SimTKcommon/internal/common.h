@@ -443,18 +443,18 @@ and a Parent class (with SEP=::) for local Index names. **/
 class EXPORT NAME {                         \
     int ix;                                 \
 public:                                     \
-    NAME() : ix(SimTK::InvalidIndex) { }       \
-    explicit NAME(int i) : ix(i)      {assert(i>=0 || i==SimTK::InvalidIndex);} \
-    explicit NAME(long l): ix((int)l) {assert(SimTK::canStoreInNonnegativeInt(l));}    \
-    explicit NAME(long long l): ix((int)l) {assert(SimTK::canStoreInNonnegativeInt(l));}    \
-    explicit NAME(unsigned int  u)  : ix((int)u)  {assert(SimTK::canStoreInInt(u));}   \
-    explicit NAME(unsigned long ul) : ix((int)ul) {assert(SimTK::canStoreInInt(ul));}  \
-    explicit NAME(unsigned long long ul) : ix((int)ul) {assert(SimTK::canStoreInInt(ul));}  \
-    operator int() const {return ix;}               \
-    bool isValid() const {return ix>=0;}            \
-    bool isValidExtended() const {return ix>=-1;}   \
-    void invalidate(){clear();}                     \
-    void clear(){ix=SimTK::InvalidIndex;}           \
+    constexpr NAME() : ix(SimTK::InvalidIndex) { }       \
+    constexpr explicit NAME(int i) : ix(i)      {assert(i>=0 || i==SimTK::InvalidIndex);} \
+    constexpr explicit NAME(long l): ix((int)l) {assert(SimTK::canStoreInNonnegativeInt(l));}    \
+    constexpr explicit NAME(long long l): ix((int)l) {assert(SimTK::canStoreInNonnegativeInt(l));}    \
+    constexpr explicit NAME(unsigned int  u)  : ix((int)u)  {assert(SimTK::canStoreInInt(u));}   \
+    constexpr explicit NAME(unsigned long ul) : ix((int)ul) {assert(SimTK::canStoreInInt(ul));}  \
+    constexpr explicit NAME(unsigned long long ul) : ix((int)ul) {assert(SimTK::canStoreInInt(ul));}  \
+    constexpr operator int() const {return ix;}               \
+    constexpr bool isValid() const {return ix>=0;}            \
+    constexpr bool isValidExtended() const {return ix>=-1;}   \
+    constexpr void invalidate(){clear();}                     \
+    constexpr void clear(){ix=SimTK::InvalidIndex;}           \
     \
     bool operator==(int  i) const {assert(isValidExtended() && isValidExtended(i)); return ix==i;}    \
     bool operator==(short s) const{assert(isValidExtended() && isValidExtended(s)); return ix==(int)s;}  \
