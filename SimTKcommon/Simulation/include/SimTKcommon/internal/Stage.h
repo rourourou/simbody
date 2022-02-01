@@ -154,7 +154,7 @@ public:
         case Acceleration:  return "Acceleration"; break;
         case Report:        return "Report";   break;
         case Infinity:      return "Infinity"; break;
-        default: assert(!"Stage::getName(): illegal level");
+        default: assert(!"Stage::getSystemName(): illegal level");
         }
         return String("INVALID STAGE LEVEL ") + String(level);
     }

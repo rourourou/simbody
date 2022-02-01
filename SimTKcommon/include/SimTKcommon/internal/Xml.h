@@ -597,7 +597,7 @@ void clearOrphan();
 /** Serialize this attribute to the given String. The output will be as it
 would appear in an XML file, i.e. name="value" or name='value' with special
 characters output as suitable entities. If you don't want it that way, use
-getName() and getValue() instead which return the raw strings. **/
+getSystemName() and getValue() instead which return the raw strings. **/
 void writeToString(String& out) const;
 
 /** Comparison operators return true if the same attribute is being

@@ -457,20 +457,7 @@ public:                                     \
     constexpr void clear(){ix=SimTK::InvalidIndex;}           \
     \
     bool operator==(int  i) const {assert(isValidExtended() && isValidExtended(i)); return ix==i;}    \
-    bool operator==(short s) const{assert(isValidExtended() && isValidExtended(s)); return ix==(int)s;}  \
-    bool operator==(long l) const {assert(isValidExtended() && isValidExtended(l)); return ix==(int)l;}  \
-    bool operator==(long long l) const {assert(isValidExtended() && isValidExtended(l)); return ix==(int)l;}  \
-    bool operator==(unsigned int  u)  const {assert(isValidExtended() && isValid(u)); return ix==(int)u;}   \
-    bool operator==(unsigned short us)const {assert(isValidExtended() && isValid(us)); return ix==(int)us;} \
-    bool operator==(unsigned long ul) const {assert(isValidExtended() && isValid(ul)); return ix==(int)ul;} \
-    bool operator==(unsigned long long ul) const {assert(isValidExtended() && isValid(ul)); return ix==(int)ul;} \
     bool operator!=(int  i)           const {return !operator==(i);}    \
-    bool operator!=(short s)          const {return !operator==(s);}    \
-    bool operator!=(long l)           const {return !operator==(l);}    \
-    bool operator!=(long long l)      const {return !operator==(l);}    \
-    bool operator!=(unsigned int  u)  const {return !operator==(u);}    \
-    bool operator!=(unsigned long ul) const {return !operator==(ul);}   \
-    bool operator!=(unsigned long long ul) const {return !operator==(ul);}   \
     \
     bool operator< (int  i) const {assert(isValidExtended() && isValidExtended(i)); return ix<i;}        \
     bool operator< (short s) const{assert(isValidExtended() && isValidExtended(s)); return ix<(int)s;}   \

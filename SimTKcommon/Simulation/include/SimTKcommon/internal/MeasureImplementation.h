@@ -381,8 +381,8 @@ public:
                  || (!isInSubsystem() && s.getSystemStage()>=prevStage),
                 "Measure_<T>::getValue()",
                 "Expected State to have been realized to at least stage "
-                "%s but stage was %s.", 
-                prevStage.getName().c_str(), 
+                "%s but stage was %s.",
+                          prevStage.getName().c_str(),
                 (isInSubsystem() ? getStage(s) : s.getSystemStage())
                     .getName().c_str());
         }
