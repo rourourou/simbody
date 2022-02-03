@@ -486,7 +486,7 @@ bool Xml::Attribute::isOrphan() const
     return tiAttr->GetDocument() == 0; }
 
 const String& Xml::Attribute::getName() const {
-    SimTK_ERRCHK_ALWAYS(isValid(), "Xml::Attribute::getName()",
+    SimTK_ERRCHK_ALWAYS(isValid(), "Xml::Attribute::getSystemName()",
         "The attribute handle was empty.");
     return getTiAttr().NameStr();
 }
