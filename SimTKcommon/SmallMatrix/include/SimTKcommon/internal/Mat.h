@@ -527,6 +527,8 @@ public:
       { assert(N==6);(*this)(0)=r0;(*this)(1)=r1;(*this)(2)=r2;
         (*this)(3)=r3;(*this)(4)=r4;(*this)(5)=r5; }
 
+    E const * data() const { return d; }
+
     // Construction from a pointer to anything assumes we're pointing
     // at a packed element list of the right length, in row order.
     template <class EE> explicit Mat(const EE* p)
