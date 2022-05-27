@@ -122,7 +122,7 @@ set(BUILD_DYNAMIC_LIBRARIES TRUE CACHE BOOL
 
 # Static libraries, tests, and examples won't be built unless this
 # is set.
-set(BUILD_STATIC_LIBRARIES FALSE CACHE BOOL
+set(BUILD_STATIC_LIBRARIES TRUE CACHE BOOL
 "Build '_static' versions of libraries")
 
 if(NOT BUILD_DYNAMIC_LIBRARIES AND NOT BUILD_STATIC_LIBRARIES)
@@ -195,13 +195,13 @@ set(SimTKSIMBODY_STATIC_LIBRARY_VN ${SimTKSIMBODY_LIBRARY_NAME_VN}_static)
 # Caution: this variable is automatically created by the CMake
 # enable_testing() command, but we'll take it over here for
 # our own purposes too.
-set(BUILD_TESTING ON CACHE BOOL
+set(BUILD_TESTING OFF CACHE BOOL
     "Control building of Simbody test programs.
     To actually build tests, one
     or both of BUILD_TESTS_AND_EXAMPLES_STATIC and
     BUILD_TESTS_AND_EXAMPLES_SHARED must be ON.")
 
-set(BUILD_EXAMPLES ON CACHE BOOL
+set(BUILD_EXAMPLES OFF CACHE BOOL
     "Control building of Simbody example programs.
     To actually build examples, one
     or both of BUILD_TESTS_AND_EXAMPLES_STATIC and
