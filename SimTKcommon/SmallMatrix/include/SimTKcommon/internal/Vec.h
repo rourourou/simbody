@@ -631,6 +631,10 @@ public:
         }
     }
 
+
+
+    ELT const * data() const { return d; }
+
     /** This method is not supported for %Vec objects. **/
     TInvert invert() const {assert(false); return TInvert();} // TODO default inversion
 

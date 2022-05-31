@@ -474,7 +474,7 @@ public:
 };
 
 static int viewWidth, viewHeight, viewWidthPixels, viewHeightPixels;
-static GLfloat fieldOfView = GLfloat(SimTK_PI/4);
+static GLfloat fieldOfView = GLfloat(SimTK_PI/3);
 static GLfloat nearClip = 1;
 static GLfloat farClip = 1000;
 static GLfloat groundHeight = 0;
@@ -1494,7 +1494,8 @@ static void renderScene(std::vector<std::string>* screenText = NULL) {
         // Render the objects in the scene.
 
         if (showGround)
-            drawGroundAndSky(farClipDistance);
+            drawGroundAndSky(2000);
+//            drawGroundAndSky(farClipDistance);
         for (int i = 0; i < (int) scene->lines.size(); i++)
             scene->lines[i].draw();
         glLineWidth((GLfloat)(getScalingFactor() * 2.0));
@@ -2665,8 +2666,8 @@ void viewMenuSelected(int option) {
     requestPassiveRedisplay();                  //----- PASSIVE REDISPLAY ----
 }
 
-static const int DefaultWindowWidth  = 800;
-static const int DefaultWindowHeight = 600;
+static const int DefaultWindowWidth  = 1200;
+static const int DefaultWindowHeight = 1000;
 
 
 // The glut callback for changing window size.
