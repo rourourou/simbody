@@ -391,7 +391,7 @@ public:
         return numGeodesicsShot;
     }
 
-    void addVizReporter(ScheduledEventReporter* reporter) const {
+    void addVizReporter(std::shared_ptr<ScheduledEventReporter> reporter) const {
         vizReporter = reporter;
         ptOnSurfSys->addEventReporter(vizReporter); // takes ownership
         ptOnSurfSys->realizeTopology();
@@ -424,7 +424,7 @@ protected:
 
     ParticleConSurfaceSystem* ptOnSurfSys;
     GeodHitPlaneEvent* geodHitPlaneEvent; // don't delete this
-    mutable ScheduledEventReporter* vizReporter; // don't delete this
+    mutable std::shared_ptr<ScheduledEventReporter> vizReporter; // don't delete this
     mutable SplitGeodesicError* splitGeodErr;
 
     // temporary objects

@@ -869,7 +869,7 @@ void ContactGeometry::setPlane(const Plane& plane) const { getImpl().setPlane(pl
 const Geodesic& ContactGeometry::getGeodP() const { return getImpl().getGeodP(); }
 const Geodesic& ContactGeometry::getGeodQ() const { return getImpl().getGeodQ(); }
 const int ContactGeometry::getNumGeodesicsShot() const { return getImpl().getNumGeodesicsShot(); }
-void ContactGeometry::addVizReporter(ScheduledEventReporter* reporter) const {
+void ContactGeometry::addVizReporter(std::shared_ptr<ScheduledEventReporter> reporter) const {
     getImpl().addVizReporter(reporter);
 }
 
@@ -1780,7 +1780,7 @@ void ContactGeometryImpl::calcGeodesic(const Vec3& xP, const Vec3& xQ,
 
 //    splitGeodErr->f(x, Fx);
     Fx = calcSplitGeodError(xP, xQ, x[0], x[1]);
-    if (vizReporter != NULL) {
+    if (vizReporter) {
         vizReporter->handleEvent(ptOnSurfSys->getDefaultState());
         sleepInSec(pauseBetweenGeodIterations);
     }
@@ -1820,7 +1820,7 @@ void ContactGeometryImpl::calcGeodesic(const Vec3& xP, const Vec3& xQ,
             break;
         }
 
-        if (vizReporter != NULL) {
+        if (vizReporter) {
             vizReporter->handleEvent(ptOnSurfSys->getDefaultState());
             sleepInSec(pauseBetweenGeodIterations);
         }
@@ -1871,7 +1871,7 @@ void ContactGeometryImpl::calcGeodesicUsingOrthogonalMethod
     Real f, fold, dist, lam = 1;
 
     Fx = calcOrthogonalGeodError(P, Q, x[0], x[1], geod);
-    if (vizReporter != NULL) {
+    if (vizReporter) {
         vizReporter->handleEvent(ptOnSurfSys->getDefaultState());
         sleepInSec(pauseBetweenGeodIterations);
     }
@@ -2014,7 +2014,7 @@ void ContactGeometryImpl::calcGeodesicUsingOrthogonalMethod
             break;
         }
 
-        if (vizReporter != NULL) {
+        if (vizReporter) {
             vizReporter->handleEvent(ptOnSurfSys->getDefaultState());
             sleepInSec(pauseBetweenGeodIterations);
         }

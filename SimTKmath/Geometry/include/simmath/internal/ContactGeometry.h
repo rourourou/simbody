@@ -797,7 +797,7 @@ const Geodesic& getGeodP() const;
 /** Get the geodesic for access by visualizer **/
 const Geodesic& getGeodQ() const;
 const int getNumGeodesicsShot() const;
-void addVizReporter(ScheduledEventReporter* reporter) const;
+void addVizReporter(std::shared_ptr<ScheduledEventReporter> reporter) const;
 /**@}**/
 
 
