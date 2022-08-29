@@ -190,13 +190,13 @@ every System. **/
 /**@{**/
 /** Add a ScheduledEventHandler to this %System, which takes over ownership
 of the event handler object. **/
-inline void addEventHandler(ScheduledEventHandler* handler);
+inline void addEventHandler(std::shared_ptr<ScheduledEventHandler> handler);
 /** Add a TriggeredEventHandler to this %System, which takes over ownership
 of the event handler object. **/
 inline void addEventHandler(TriggeredEventHandler* handler);
 /** Add a ScheduledEventReporter to this %System, which takes over ownership
 of the event reporter object. **/
-inline void addEventReporter(ScheduledEventReporter* handler) const;
+void addEventReporter(std::shared_ptr<ScheduledEventReporter> handler) const;
 /** Add a TriggeredEventReporter to this %System, which takes over ownership
 of the event reporter object. **/
 inline void addEventReporter(TriggeredEventReporter* handler) const;
@@ -910,10 +910,15 @@ this Subsystem. **/
 class SimTK_SimTKCOMMON_EXPORT DefaultSystemSubsystem : public Subsystem {
 public:
     explicit DefaultSystemSubsystem(System& sys);
-    void addEventHandler(ScheduledEventHandler* handler);
+    void addEventHandler(std::shared_ptr<ScheduledEventHandler> handler);
     void addEventHandler(TriggeredEventHandler* handler);
-    void addEventReporter(ScheduledEventReporter* handler) const;
+    void addEventReporter(std::shared_ptr<ScheduledEventReporter> handler) const;
     void addEventReporter(TriggeredEventReporter* handler) const;
+
+    void enableEvents(SimTK::State const & s, bool enable) const;
+    void enableEventHandlers(SimTK::State const & s, bool enable) const;
+    void enableEventReporters(SimTK::State const & s, bool enable) const;
+
     EventId createEventId(SubsystemIndex subsys, const State& state) const;
     void findSubsystemEventIds
        (SubsystemIndex subsys, const State& state, 
@@ -928,11 +933,11 @@ private:
     Guts& updGuts();
 };
 
-inline void System::addEventHandler(ScheduledEventHandler* handler)
+inline void System::addEventHandler(std::shared_ptr<ScheduledEventHandler> handler)
 {   updDefaultSubsystem().addEventHandler(handler); }
 inline void System::addEventHandler(TriggeredEventHandler* handler)
 {   updDefaultSubsystem().addEventHandler(handler); }
-inline void System::addEventReporter(ScheduledEventReporter* handler) const
+inline void System::addEventReporter(std::shared_ptr<ScheduledEventReporter> handler) const
 {   getDefaultSubsystem().addEventReporter(handler); }
 inline void System::addEventReporter(TriggeredEventReporter* handler) const
 {   getDefaultSubsystem().addEventReporter(handler); }

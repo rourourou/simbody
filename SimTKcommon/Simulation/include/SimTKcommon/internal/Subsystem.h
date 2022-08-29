@@ -350,8 +350,8 @@ template <class T> Measure_<T> getMeasure_(MeasureIndex mx) const
 
 // dynamic_cast the returned reference to a reference to your concrete Guts
 // class.
-const Subsystem::Guts& getSubsystemGuts() const {assert(guts); return *guts;}
-Subsystem::Guts&       updSubsystemGuts()       {assert(guts); return *guts;}
+constexpr inline const Subsystem::Guts& getSubsystemGuts() const {assert(guts); return *guts;}
+constexpr inline Subsystem::Guts&       updSubsystemGuts()       {assert(guts); return *guts;}
 
 // Put new Guts into this *empty* handle and take over ownership.
 // If this handle is already in use, this routine will throw

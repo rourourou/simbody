@@ -1061,6 +1061,9 @@ public:
     Array_<EventId> scheduledReportIds;
     Array_<EventTriggerByStageIndex> triggeredReportIndices;
     Array_<EventId> triggeredReportIds;
+
+    bool shouldInvokeHandlers_  = true;
+    bool shouldInvokeReporters_ = true;
 };
 
 class DefaultSystemSubsystem::Guts : public Subsystem::Guts {
@@ -1069,25 +1072,34 @@ public:
     Guts() : Subsystem::Guts("DefaultSystemSubsystem", "0.0.1") { }
     
     ~Guts() {
-        for (int i = 0; i < (int)scheduledEventHandlers.size(); ++i)
-            delete scheduledEventHandlers[i];
         for (int i = 0; i < (int)triggeredEventHandlers.size(); ++i)
             delete triggeredEventHandlers[i];
-        for (int i = 0; i < (int)scheduledEventReporters.size(); ++i)
-            delete scheduledEventReporters[i];
         for (int i = 0; i < (int)triggeredEventReporters.size(); ++i)
             delete triggeredEventReporters[i];
+    }
+
+    void enableEvents(SimTK::State const & s, bool enable) const {
+      enableEventHandlers(s, enable);
+      enableEventReporters(s, enable);
+    }
+    void enableEventHandlers(SimTK::State const & s, bool enable) const {
+      auto & info = updCachedEventInfo(s);
+      info.shouldInvokeHandlers_ = enable;
+    }
+    void enableEventReporters(SimTK::State const & s, bool enable) const {
+      auto & info = updCachedEventInfo(s);
+      info.shouldInvokeReporters_ = enable;
     }
     
     Guts* cloneImpl() const override {
         return new Guts(*this);
     }
         
-    const Array_<ScheduledEventHandler*>& getScheduledEventHandlers() const {
+    const std::vector<std::shared_ptr<ScheduledEventHandler>>& getScheduledEventHandlers() const {
         return scheduledEventHandlers;
     }
     
-    Array_<ScheduledEventHandler*>& updScheduledEventHandlers() {
+    std::vector<std::shared_ptr<ScheduledEventHandler>>& updScheduledEventHandlers() {
         invalidateSubsystemTopologyCache();
         return scheduledEventHandlers;
     }
@@ -1101,11 +1113,11 @@ public:
         return triggeredEventHandlers;
     }
     
-    const Array_<ScheduledEventReporter*>& getScheduledEventReporters() const {
+    const std::vector<std::shared_ptr<ScheduledEventReporter>>& getScheduledEventReporters() const {
         return scheduledEventReporters;
     }
     
-    Array_<ScheduledEventReporter*>& updScheduledEventReporters() const {
+    std::vector<std::shared_ptr<ScheduledEventReporter>>& updScheduledEventReporters() const {
         invalidateSubsystemTopologyCache();
         return scheduledEventReporters;
     }
@@ -1141,9 +1153,7 @@ public:
         info.triggeredReportIndices.clear();
         info.triggeredReportIds.clear();
         info.eventIdCounter = 0;
-        for (Array_<ScheduledEventHandler*>::const_iterator 
-                 e = scheduledEventHandlers.begin(); 
-                 e != scheduledEventHandlers.end(); ++e) {
+        for (auto const & _ : scheduledEventHandlers) {
             EventId id;
             createScheduledEvent(s, id);
             info.scheduledEventIds.push_back(id);
@@ -1157,9 +1167,7 @@ public:
             info.triggeredEventIds.push_back(id);
             info.triggeredEventIndices.push_back(index);
         }
-        for (Array_<ScheduledEventReporter*>::const_iterator 
-                 e = scheduledEventReporters.begin(); 
-                 e != scheduledEventReporters.end(); ++e) {
+        for (auto const & _ : scheduledEventReporters) {
             EventId id;
             createScheduledEvent(s, id);
             info.scheduledReportIds.push_back(id);
@@ -1297,6 +1305,8 @@ public:
                       HandleEventsResults& results) const override 
     {
         const CachedEventInfo& info = getCachedEventInfo(s);
+        if (!info.shouldInvokeHandlers_) { return; }
+
         const Real accuracy = options.getAccuracy();
         bool shouldTerminate = false;
         
@@ -1352,7 +1362,7 @@ public:
     void reportEventsImpl(const State& s, Event::Cause cause, 
                       const Array_<EventId>& eventIds) const override {
         const CachedEventInfo& info = getCachedEventInfo(s);
-        
+        if (!info.shouldInvokeReporters_) { return; }
         // Build a set of the ids for quick lookup.
         
         std::set<EventId> idSet;
@@ -1369,7 +1379,7 @@ public:
         }
         
         // Process scheduled events.
-        
+
         if (cause == Event::Cause::Scheduled) {
             for (int i = 0; i < (int)scheduledEventReporters.size(); ++i) {
                 if (idSet.find(info.scheduledReportIds[i]) != idSet.end())
@@ -1380,11 +1390,13 @@ public:
 
 private:
     mutable CacheEntryIndex                 cachedEventInfoIndex;
-    mutable Array_<ScheduledEventHandler*>  scheduledEventHandlers;
+    mutable std::vector<std::shared_ptr<ScheduledEventHandler>>  scheduledEventHandlers;
     mutable Array_<TriggeredEventHandler*>  triggeredEventHandlers;
-    mutable Array_<ScheduledEventReporter*> scheduledEventReporters;
+    mutable std::vector<std::shared_ptr<ScheduledEventReporter>> scheduledEventReporters;
     mutable Array_<TriggeredEventReporter*> triggeredEventReporters;
 };
+
+
 
 DefaultSystemSubsystem::DefaultSystemSubsystem(System& sys) {
     adoptSubsystemGuts(new DefaultSystemSubsystem::Guts());
@@ -1408,7 +1420,7 @@ DefaultSystemSubsystem::Guts& DefaultSystemSubsystem::updGuts() {
  * The System assumes ownership of the object passed to this method, and will 
  * delete it when the System is deleted.
  */
-void DefaultSystemSubsystem::addEventHandler(ScheduledEventHandler* handler) {
+void DefaultSystemSubsystem::addEventHandler(std::shared_ptr<ScheduledEventHandler> handler) {
     updGuts().updScheduledEventHandlers().push_back(handler);
 }
 
@@ -1436,8 +1448,8 @@ addEventHandler(TriggeredEventHandler* handler) {
  * const System.
  */
 void DefaultSystemSubsystem::
-addEventReporter(ScheduledEventReporter* handler) const {
-    getGuts().updScheduledEventReporters().push_back(handler);
+addEventReporter(std::shared_ptr<ScheduledEventReporter> handler) const {
+    getGuts().updScheduledEventReporters().push_back(std::move(handler));
 }
 
 /*
@@ -1454,6 +1466,17 @@ addEventReporter(ScheduledEventReporter* handler) const {
 void DefaultSystemSubsystem::
 addEventReporter(TriggeredEventReporter* handler) const {
     getGuts().updTriggeredEventReporters().push_back(handler);
+}
+
+
+void DefaultSystemSubsystem::enableEvents(SimTK::State const & s, bool enable) const {
+  getGuts().enableEvents(s, enable);
+}
+void DefaultSystemSubsystem::enableEventHandlers(SimTK::State const & s, bool enable) const {
+  getGuts().enableEventHandlers(s, enable);
+}
+void DefaultSystemSubsystem::enableEventReporters(SimTK::State const & s, bool enable) const {
+  getGuts().enableEventReporters(s, enable);
 }
 
 /**
