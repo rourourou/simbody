@@ -260,7 +260,7 @@ VisualizerProtocol::VisualizerProtocol
         vizExecutableName =
             Pathname::getEnvironmentVariable("SIMBODY_VISUALIZER_NAME");
     } else {
-        vizExecutableName = "simbody-visualizer";
+        vizExecutableName = "arcs-viz";
         #ifndef NDEBUG
             vizExecutableName += "_d";
         #endif

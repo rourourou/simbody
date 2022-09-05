@@ -159,7 +159,8 @@ if(BUILD_VISUALIZER)
     # NOTE: If you change GUI_NAME, you must also change the value of GuiAppName
     # in VisualizerProtocol.cpp
     # TODO even that is not sufficient.
-    set(GUI_NAME "simbody-visualizer")
+#    set(GUI_NAME "simbody-visualizer")
+    set(GUI_NAME "arcs-viz")
     set(GUI_NAME ${GUI_NAME} PARENT_SCOPE)
     add_subdirectory(Visualizer/simbody-visualizer)
 endif()
