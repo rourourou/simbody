@@ -14,7 +14,7 @@ if(MSVC)
     # To properly support Visual Studio 2015.
     set(SIMBODY_REQUIRED_CMAKE_VERSION 3.1.3)
 else()
-    set(SIMBODY_REQUIRED_CMAKE_VERSION 2.8.10)
+    set(SIMBODY_REQUIRED_CMAKE_VERSION 3.22)
 endif()
 cmake_minimum_required(VERSION ${SIMBODY_REQUIRED_CMAKE_VERSION})
 
@@ -566,7 +566,7 @@ set(MATH_LIBS_TO_USE_VN ${MATH_LIBS_TO_USE})
 #
 # Allow automated build and dashboard.
 #
-include(Dart)
+#include(Dart)
 ## When in Debug mode and running valgrind, some of the test
 ## cases take longer than the default 1500 seconds.
 set(DART_TESTING_TIMEOUT 7200)
