@@ -324,9 +324,9 @@ VisualizerProtocol::VisualizerProtocol
     #if defined(__APPLE__)
         for (auto& path : actualSearchPath) {
             #ifndef NDEBUG
-                path += "/simbody-visualizer_d.app/Contents/MacOS/";
+                path += "/arcs-viz_d.app/Contents/MacOS/";
             #else
-                path += "/simbody-visualizer.app/Contents/MacOS/";
+                path += "/arcs-viz.app/Contents/MacOS/";
             #endif
         }
     #endif

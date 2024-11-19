@@ -85,7 +85,7 @@ if(${SIMBODY_USE_INSTALL_RPATH})
     # vis_dir_to_install_dir is most likely "../"
     if (APPLE)
         set(vis_install_dir
-                "${SIMBODY_VISUALIZER_INSTALL_DIR}/simbody-visualizer.app/Contents/MacOS")
+                "${SIMBODY_VISUALIZER_INSTALL_DIR}/arcs-viz.app/Contents/MacOS")
     else()
         set(vis_install_dir "${SIMBODY_VISUALIZER_INSTALL_DIR}")
     endif()
